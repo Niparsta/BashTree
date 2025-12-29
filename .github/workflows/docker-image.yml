@@ -19,5 +19,7 @@ jobs:
 
     - name: Build and Push
       run: |
-        docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/tree-script:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/tree-script:latest
+        OWNER=$(echo "${{ secrets.DOCKER_USERNAME }}" | tr '[:upper:]' '[:lower:]')
+        
+        docker build . --file Dockerfile --tag $OWNER/tree-script:latest
+        docker push $OWNER/tree-script:latest
