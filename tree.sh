@@ -23,17 +23,23 @@ draw_tree() {
 
         # Выбор символа для ветки - последний элемент или нет
         if [ "$n" -eq "$total" ]; then
-            echo "${prefix}└── $name"
+            local char="└── "
             local next_p="${prefix}    "
         else
-            echo "${prefix}├── $name"
+            local char="├── "
             local next_p="${prefix}│   "
         fi
 
-        # Рекурсия, если это папка
-        [ -d "$item" ] && draw_tree "$item" "$next_p"
+        # Вывод с подкраской: папки синие (\e[34m), файлы обычные (\e[0m)
+        if [ -d "$item" ]; then
+            echo -e "${prefix}${char}\e[34m${name}\e[0m"
+            draw_tree "$item" "$next_p"
+        else
+            echo -e "${prefix}${char}\e[0m${name}"
+        fi
     done
 }
 
-echo "$dir"
+# Подсветка корневой папки и запуск рекурсии
+echo -e "\e[34m${dir}\e[0m"
 draw_tree "$dir" ""
